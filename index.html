@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <title>Drama Text Study Part 2</title>
+    <link rel="icon" type="image/x-icon" href="./assets/Logo_last.png" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: url("assets/Backgrounds.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            object-fit: cover;
+            min-height: 100vh;
+        }
+
+        #heading {
+            text-align: center;
+            background-color: whitesmoke;
+            padding: 10px 20px;
+            margin: 10px auto;
+            color: black;
+            font-size: 2em;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            width: fit-content;
+            border-radius: 10px;
+        }
+
+        .activity {
+            margin: 20px auto;
+            padding: 0 2%;
+            display: flex;
+            gap: 2%;
+            align-items: flex-start;
+        }
+
+        /* Question Buttons Sidebar - 6% */
+        .sidebar {
+            width: 100px;
+            height: fit-content;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            color: white;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .questionButtons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        
+       .qBtn {
+            padding: 12% 9%;
+            border: none;
+            border-radius: 10px;
+            background-color: #f5f5f5; /* Grayish white background */
+            color: black;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            width: 85%;
+            text-align: center;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8); /* Dark shadow bottom right */
+            position: relative;
+        }
+
+        .qBtn:hover {
+            background-color: #e8e8e8;
+            transform: translateY(-1px);
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .qBtn.active {
+            background-color: #f5f5f5;
+            box-shadow: none; /* Remove shadow when active */
+            border: 3px solid #000; /* Dark black outline */
+            transform: translateY(2px); /* Pressed effect */
+        }
+
+        .qBtn:active {
+            box-shadow: none;
+            border: 3px solid #000;
+            transform: translateY(2px);
+        }
+
+        /* Story Section - 45% */
+        .storySection {
+            flex: 0 0 40%;
+            background: white;
+            border-radius: 20px;
+            padding: 15px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            max-height: 70vh;
+            min-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .storyContent {
+            font-size: 1.2em;
+           
+            color: #333;
+        }
+
+        .storyContent p {
+            margin-bottom: 15px;
+        }
+
+        .storyContent strong {
+            color: #667eea;
+        }
+
+        /* Question Section - 45% */
+        .questionSection {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+           
+        }
+
+        .questionContainer {
+            background: white;
+            border-radius: 20px;
+            padding: 15px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+             max-height: 70vh;
+            min-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .questionText {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: #333;
+            line-height: 1.4;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .optionGrid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .optionBtn {
+            padding: 15px 20px;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.3em;
+            text-align: center;
+            position: relative;
+        }
+
+        .optionBtn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .optionBtn.correct {
+            background: #d4edda;
+            border-color: #4CAF50;
+            color: #155724;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .optionBtn.incorrect {
+            background: #f8d7da;
+            border-color: #f44336;
+            color: #721c24;
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+        }
+
+        .feedbackSection {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .feedbackText {
+            font-size: 1.2em;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .nextBtn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nextBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .finalScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border-radius: 20px;
+            color: white;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        /* Scrollbar styling */
+        .storySection::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .storySection::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .storySection::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .storySection::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        /* Question Container Scrollbar styling */
+        .questionContainer::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .questionContainer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .questionContainer::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .questionContainer::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+        /* Final full screen mode */
+.fullscreen-final .sidebar,
+.fullscreen-final .storySection {
+    display: none !important;
+}
+
+.fullscreen-final .questionSection {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.fullscreen-final .questionContainer {
+    max-height: none;
+    height: 70vh;
+}
+
+
+        /* Responsive design */
+        
+    </style>
+</head>
+
+<body>
+    <div>
+        <p id="heading">Drama Text Study Part 2</p>
+    </div>
+
+    <div class="activity">
+        <!-- Left Sidebar - Question Buttons (6%) -->
+        <div class="sidebar">
+            <div class="questionButtons" id="questionButtons"></div>
+        </div>
+
+        <!-- Middle - Story Section (45%) -->
+        <div class="storySection">
+            <div class="storyContent" id="storyContent"></div>
+        </div>
+
+        <!-- Right - Question Section (45%) -->
+        <div class="questionSection">
+            <div class="questionContainer">
+                <div id="questionContent" class="questionContent"></div>
+
+                <div class="finalScreen" id="finalScreen" style="display:none;">
+                    <div>
+                        <h2>🎉 Well Done!</h2>
+                        <p>You've completed all questions!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        let selectedAnswer = null;
+        let data = [
+  
+  
+  
+ 
+  {
+    "questionNo": "Q1",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "In Passage 4, Trebonius says: \"Caesar, I will. (aside) And so near will I be, / That your best friends shall wish I had been further.\"<br> Which part of this does Caesar hear?",
+    "options": [
+      "The whole speech, from \"Caesar, I will\" to \"further\"",
+      "Only the part about being so near that his friends wish he were further",
+      "None of it, because Trebonius says all of it to the audience",
+      "Only \"Caesar, I will.\""
+    ],
+    "correct": 3
+  },
+  {
+    "questionNo": "Q2",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "In Passage 4, Brutus says in an aside: \"That every like is not the same, O Caesar, / The heart of Brutus yearns to think upon.\" Caesar has just called them all \"friends\".<br> What does this aside reveal about Brutus?",
+    "options": [
+      "He is happy and eager to drink wine with Caesar.",
+      "It grieves him that he only looks like Caesar's friend, when he is really plotting against him.",
+      "He is openly warning Caesar about the plot.",
+      "He has no part in the plot against Caesar."
+    ],
+    "correct": 1
+  },
+  {
+    "questionNo": "Q3",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "Why is Artemidorus's speech in Passage 5 a soliloquy?",
+    "options": [
+      "He is alone on stage, speaking his thoughts and plans aloud so the audience can hear them.",
+      "Other characters are on stage but do not hear him.",
+      "He is speaking directly to Caesar.",
+      "He is reading the paper aloud to the Senate."
+    ],
+    "correct": 0
+  },
+  {
+    "questionNo": "Q4",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "Tanvi was asked what Artemidorus's soliloquy reveals about his plan. Which answer is correct?",
+    "options": [
+      "He will join the conspirators against Caesar.",
+      "He will burn the paper so no one finds it.",
+      "He will wait in the street and hand Caesar the warning, posing as someone with a request.",
+      "He will send the paper to Calphurnia."
+    ],
+    "correct": 2
+  },
+  {
+    "questionNo": "Q5",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "In Passage 4, Caesar says: \"Good friends, go in, and taste some wine with me; / And we, like friends, will straightway go together.\" Why does this line create dramatic irony?",
+    "options": [
+      "The audience knows these \"friends\" are plotting to kill him, but Caesar does not.",
+      "Caesar knows about the plot and is joking with them.",
+      "The conspirators do not know about their own plot.",
+      "The audience does not yet know about the plot."
+    ],
+    "correct": 0
+  },
+  {
+    "questionNo": "Q6",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "Two students discussed Caesar's line in Passage 1: \"How foolish do your fears seem now, Calphurnia!\" <br><i>Farhan:</i> \"The audience may feel uneasy, because the rest of the text shows Calphurnia's fears are right and Caesar is walking into danger.\" <br><i>Zoya:</i> \"The audience learns that Calphurnia's fears really were foolish.\" Who is correct?",
+    "options": [
+      "Only Zoya, because Caesar says the fears are foolish.",
+      "Both, because the fears are foolish and right at the same time.",
+      "Neither, because the line has nothing to do with dramatic irony.",
+      "Only Farhan, because the asides and Artemidorus's warning show Caesar is surrounded by men planning to kill him."
+    ],
+    "correct": 3
+  },
+  {
+    "questionNo": "Q7",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "At the start of Passage 2, the conspirators enter just as Caesar has decided to go, and he says: \"And look where Publius is come to fetch me.\" What effect does the timing of this entrance have?",
+    "options": [
+      "The conspirators arrive to persuade Caesar to stay at home.",
+      "It shows that Caesar has decided to stay at home.",
+      "The men who are plotting against Caesar arrive to take him away at the very moment he decides to go, which builds tension.",
+      "The entrance has no effect, because it only brings more characters on stage."
+    ],
+    "correct": 2
+  },
+  {
+    "questionNo": "Q8",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "At the end of Passage 4, the stage direction reads \"(Exeunt.)\". What does this tell the actors?",
+    "options": [
+      "Only one character leaves the stage.",
+      "All the characters on stage leave together.",
+      "The characters freeze in place.",
+      "The play has ended."
+    ],
+    "correct": 1
+  },
+  {
+    "questionNo": "Q9",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "At the end of Passage 1, Caesar says: \"Give me my robe, for I will go.\" What does the robe show the audience?",
+    "options": [
+      "Caesar has made up his mind to go to the Senate: putting on the robe turns his decision into action.",
+      "Caesar is cold and wants to keep warm.",
+      "Caesar is getting ready for bed.",
+      "Caesar is giving the robe to Decius as a gift."
+    ],
+    "correct": 0
+  },
+  {
+    "questionNo": "Q10",
+    "story": "<b>\"Julius Caesar\"<br>by William Shakespeare</b><br><br><b>Passage 1</b><br>DECIUS: I have, when you have heard what I can say;<br>And know it now. The Senate have concluded<br>To give this day a crown to mighty Caesar.<br>If you shall send them word you will not come,<br>Their minds may change. Besides, it were a mock<br>Apt to be render'd, for someone to say,<br>\"Break up the Senate till another time,<br>When Caesar's wife shall meet with better dreams.\"<br>If Caesar hide himself, shall they not whisper<br>\"Lo, Caesar is afraid\"?<br>Pardon me, Caesar; for my dear dear love<br>To your proceeding bids me tell you this,<br>And reason to my love is liable.<br>CAESAR: How foolish do your fears seem now, Calphurnia!<br>I am ashamed I did yield to them.<br>Give me my robe, for I will go.<br><br><b>Passage 2</b><br>(Enter BRUTUS, LIGARIUS, METELLUS, CASCA, TREBONIUS, CINNA and PUBLIUS.)<br>And look where Publius is come to fetch me.<br>PUBLIUS: Good morrow, Caesar.<br>CAESAR: Welcome, Publius.<br>What, Brutus, are you stirr'd so early too?<br>Good morrow, Casca. Caius Ligarius,<br>Caesar was ne'er so much your enemy<br>As that same ague which hath made you lean.<br>What is't o'clock?<br>BRUTUS: Caesar, 'tis strucken eight.<br>CAESAR: I thank you for your pains and courtesy.<br><br><b>Passage 3</b><br>(Enter ANTONY.)<br>See! Antony, that revels long a-nights,<br>Is notwithstanding up. Good morrow, Antony.<br>ANTONY: So to most noble Caesar.<br>CAESAR: Bid them prepare within.<br>I am to blame to be thus waited for.<br>Now, Cinna; now, Metellus; what, Trebonius!<br>I have an hour's talk in store for you:<br>Remember that you call on me today;<br>Be near me, that I may remember you.<br><br><b>Passage 4</b><br>TREBONIUS: Caesar, I will. (aside) And so near will I be,<br>That your best friends shall wish I had been further.<br>CAESAR: Good friends, go in, and taste some wine with me;<br>And we, like friends, will straightway go together.<br>BRUTUS: (aside) That every like is not the same, O Caesar,<br>The heart of Brutus yearns to think upon.<br>(Exeunt.)<br><br><b>Passage 5</b><br>(A street near the Capitol. Enter ARTEMIDORUS, reading a paper.)<br>ARTEMIDORUS: \"Caesar, beware of Brutus; take heed of Cassius; come not near Casca; have an eye to Cinna; trust not Trebonius; mark well Metellus Cimber; Decius Brutus loves thee not; thou hast wrong'd Caius Ligarius. There is but one mind in all these men, and it is bent against Caesar. If thou be'st not immortal, look about you: security gives way to conspiracy. The mighty gods defend thee! Thy lover, Artemidorus.\"<br>Here will I stand till Caesar pass along,<br>And as a suitor will I give him this.<br>My heart laments that virtue cannot live<br>Out of the teeth of emulation.<br>If thou read this, O Caesar, thou mayest live;<br>If not, the Fates with traitors do contrive.<br>(Exit.)",
+    "question": "In Passage 5, Artemidorus enters \"reading a paper\", which he signs \"Thy lover, Artemidorus\". How does this paper build tension?",
+    "options": [
+      "It is a love letter, which shows Artemidorus is in love with Caesar.",
+      "It is the crown the Senate plans to give Caesar.",
+      "It is a written warning, and the audience waits to see whether Caesar will read it in time.",
+      "It is Decius's letter inviting Caesar to the Senate."
+    ],
+    "correct": 2
+  }
+
+
+
+]
+
+        window.onload = () => {
+            renderButtons();
+            renderStory();
+            renderQuestion();
+        };
+
+        function renderButtons() {
+            const container = document.getElementById('questionButtons');
+            container.innerHTML = '';
+            data.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.innerText = item.questionNo;
+                btn.className = 'qBtn' + (index === currentIndex ? ' active' : '');
+                btn.onclick = () => {
+                    currentIndex = index;
+                    selectedAnswer = null;
+                    renderStory();
+                    renderQuestion();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function renderStory() {
+            const storyContent = document.getElementById('storyContent');
+            const q = data[currentIndex];
+            
+            if (q.story && Array.isArray(q.story)) {
+                storyContent.innerHTML = q.story.join('');
+            } else if (q.story) {
+                storyContent.innerHTML = q.story;
+            } else {
+                storyContent.innerHTML = '<p>No story content available.</p>';
+            }
+        }
+
+        function renderQuestion() {
+            const questionContent = document.getElementById('questionContent');
+            const finalScreen = document.getElementById('finalScreen');
+
+            if (currentIndex >= data.length) {
+    questionContent.style.display = 'none';
+    finalScreen.style.display = 'flex';
+
+    // Enable full screen final view
+    document.querySelector('.activity').classList.add('fullscreen-final');
+
+    return;
+}
+
+
+            const q = data[currentIndex];
+            let html = '';
+
+            html += `<h3 class='questionText'>${q.question}</h3>`;
+            html += `<div class="optionGrid">`;
+            
+            q.options.forEach((opt, idx) => {
+                html += `<button class="optionBtn" onclick="handleOptionClick(${idx})">${opt}</button>`;
+            });
+
+            html += `</div>`;
+            html += `<div class="feedbackSection">
+                        <p class="feedbackText" id="feedbackText"></p>
+                        <button class="nextBtn" id="nextBtn" style="display:none;" onclick="handleNext()">Next</button>
+                     </div>`;
+
+            questionContent.innerHTML = html;
+            questionContent.style.display = 'block';
+            finalScreen.style.display = 'none';
+            renderButtons();
+        }
+
+        function handleOptionClick(index) {
+            if (selectedAnswer !== null) return;
+
+            selectedAnswer = index;
+            const q = data[currentIndex];
+            const feedback = document.getElementById('feedbackText');
+            const nextBtn = document.getElementById('nextBtn');
+            const optionBtns = document.querySelectorAll('.optionBtn');
+
+            optionBtns.forEach((btn) => {
+                btn.style.pointerEvents = 'none';
+            });
+
+            if (index === q.correct) {
+                optionBtns[index].classList.add('correct');
+                feedback.innerHTML = `<span class='emoji'>✅</span> Correct! Great job!`;
+                feedback.style.color = '#4CAF50';
+                nextBtn.innerText = currentIndex + 1 < data.length ? 'Next' : 'Finish';
+                nextBtn.style.display = 'block';
+            } else {
+                optionBtns[index].classList.add('incorrect');
+                feedback.innerHTML = `<span class='emoji'>❌</span> Try again!`;
+                feedback.style.color = '#f44336';
+
+                optionBtns.forEach((btn, idx) => {
+                    if (idx !== index) {
+                        btn.style.pointerEvents = 'auto';
+                    }
+                });
+                selectedAnswer = null;
+            }
+        }
+
+        function handleNext() {
+            if (currentIndex + 1 < data.length) {
+                currentIndex++;
+                selectedAnswer = null;
+                renderStory();
+                renderQuestion();
+            } else {
+                currentIndex++;
+                renderQuestion();
+            }
+        }
+    </script>
+</body>
+
+</html>
